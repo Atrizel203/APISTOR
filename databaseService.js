@@ -11,10 +11,10 @@ const databaseService = () => {
   });
 
   const tabla = "doctores";
-  const tabla2 = "pacientes";
+  const tabla2 = "Pacientes_registrados";
   const tabla3 = "citas";
   const tabla4 = "clientes";
-  const tabla5 = "historialclinico";
+  const tabla5 = "historial";
   const tabla6 = "inventario";
 
   const getPerfilDoc = async (Doctor) => {
@@ -104,29 +104,22 @@ const databaseService = () => {
   };
 
   const getHistoriales =  () => {
-    const resultado = knex
-      .select({
-        Nombre: "Nombre",
-        ApellidoPaterno: "ApellidoPaterno",
-        ApellidoMaterno: "ApellidoMaterno",
-        Edad: "Edad",
-        TipoSangre: "TipoSangre",
-        Alergias: "Alergias",
-        Padecimientos: "Padecimientos",
-        NumeroTel: "NumeroTel",
-        Historial: "Historial",
-        Comentarios: "Comentarios",
-      })
-      .from(tabla5)
-      .innerJoin(tabla2);
+    const resultado = knex(tabla2)
+      .select({ ID_Paciente: "ID_Paciente", Nombre: "Nombre", ApellidoPaterno: "ApellidoPaterno", ApellidoMaterno: "ApellidoMaterno" })
     return resultado;
   };
 
-  const setHistorial = ({ ID, Historial, Comentarios, ID_Paciente }) => {
+  const setHistorial = ({ ID, Valoracion_1, Valoracion_2, Valoracion_3, Consulta_1, Consulta_2, Consulta_3, Estudios, Resultados, ID_Paciente }) => {
     return knex(tabla5).insert({
       ID: ID,
-      Historial: Historial,
-      Comentarios: Comentarios,
+      Valoracion_1: Valoracion_1,
+      Valoracion_2: Valoracion_2,
+      Valoracion_3: Valoracion_3,
+      Consulta_1: Consulta_1,
+      Consulta_2: Consulta_2,
+      Consulta_3: Consulta_3,
+      Estudios: Estudios,
+      Resultados: Resultados,
       ID_Paciente: ID_Paciente,
     });
   };
@@ -138,9 +131,13 @@ const databaseService = () => {
     ApellidoMaterno,
     TipoSangre,
     Edad,
-    NumeroTel,
+    Telefono,
     Alergias,
-    Padecimientos,
+    Enfermedades,
+    Peso,
+    Altura,
+    Medicamentos,
+
   }) => {
     return knex(tabla2).insert({
       ID_Paciente: ID_Paciente,
@@ -150,14 +147,16 @@ const databaseService = () => {
       Edad: Edad,
       TipoSangre: TipoSangre,
       Alergias: Alergias,
-      Padecimientos: Padecimientos,
-      NumeroTel: NumeroTel,
+      Enfermedades: Enfermedades,
+      Peso: Peso,
+      Altura: Altura,
+      Medicamentos: Medicamentos,
+      Telefono: Telefono,
     });
   };
 
-  const setCita = ({ID_citas, ID_Doctor, FechaHora, Estado, asunto, ID_Cliente}) => {
+  const setCita = ({ID_Doctor, FechaHora, Estado, asunto, ID_Cliente}) => {
     return knex(tabla3).insert({
-      ID_citas: ID_citas,
       ID_Doctor: ID_Doctor,
       FechaHora: FechaHora,
       Estado: Estado,
