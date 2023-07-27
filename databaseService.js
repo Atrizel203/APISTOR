@@ -105,7 +105,7 @@ const databaseService = () => {
 
   const getHistoriales =  () => {
     const resultado = knex(tabla2)
-      .select({ ID_Paciente: "ID_Paciente", Nombre: "Nombre", ApellidoPaterno: "ApellidoPaterno", ApellidoMaterno: "ApellidoMaterno" })
+      .select()
     return resultado;
   };
 
