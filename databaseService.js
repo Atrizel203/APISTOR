@@ -94,38 +94,53 @@ const databaseService = () => {
     return resultado;
   };
 
-  const getHistorialEspecifico = (ID_Paciente) => {
+  const getHistorialEspecifico = (idPaciente) => {
     const resultado = knex()
-      .select().where({ID_Paciente: ID_Paciente})
+      .select().where({idPaciente: idPaciente})
       .from(tabla5)
       .innerJoin(tabla2)
       ;
     return resultado;
   };
 
-  const getHistoriales =  () => {
-    const resultado = knex(tabla2)
+  const getHistorial = (ID) => {
+    const resultado = knex(tabla5)
       .select()
+      .where({ ID: ID })
+      .first();
     return resultado;
   };
 
-  const setHistorial = ({ ID, Valoracion_1, Valoracion_2, Valoracion_3, Consulta_1, Consulta_2, Consulta_3, Estudios, Resultados, ID_Paciente }) => {
+  const getPaciente = (idPaciente) => {
+    const resultado = knex(tabla2)
+      .select()
+      .where({ idPaciente: idPaciente })
+      .first();
+    return resultado;
+  };
+  const getHistoriales =  () => {
+    const resultado = knex(tabla2)
+      .select('idPaciente', 'Nombre', 'ApellidoPaterno', 'ApellidoMaterno')
+    return resultado;
+  };
+
+  const setHistorial = ({ ID, Valoracion1, Valoracion2, Valoracion3, Consulta1, Consulta2, Consulta3, Estudios, Resultados, id_paciente }) => {
     return knex(tabla5).insert({
       ID: ID,
-      Valoracion_1: Valoracion_1,
-      Valoracion_2: Valoracion_2,
-      Valoracion_3: Valoracion_3,
-      Consulta_1: Consulta_1,
-      Consulta_2: Consulta_2,
-      Consulta_3: Consulta_3,
+      Valoracion1: Valoracion1,
+      Valoracion2: Valoracion2,
+      Valoracion3: Valoracion3,
+      Consulta1: Consulta1,
+      Consulta2: Consulta2,
+      Consulta3: Consulta3,
       Estudios: Estudios,
       Resultados: Resultados,
-      ID_Paciente: ID_Paciente,
+      id_paciente: id_paciente,
     });
   };
 
   const setPaciente = ({
-    ID_Paciente,
+    idPaciente,
     Nombre,
     ApellidoPaterno,
     ApellidoMaterno,
@@ -140,7 +155,7 @@ const databaseService = () => {
 
   }) => {
     return knex(tabla2).insert({
-      ID_Paciente: ID_Paciente,
+      idPaciente: idPaciente,
       Nombre: Nombre,
       ApellidoPaterno: ApellidoPaterno,
       ApellidoMaterno: ApellidoMaterno,
@@ -155,12 +170,11 @@ const databaseService = () => {
     });
   };
 
-  const setCita = ({ID_Doctor, FechaHora, Estado, asunto, ID_Cliente}) => {
+  const setCita = ({ID_Doctor, Comentarios, Horario,  ID_Cliente}) => {
     return knex(tabla3).insert({
       ID_Doctor: ID_Doctor,
-      FechaHora: FechaHora,
-      Estado: Estado,
-      asunto: asunto,
+      Comentarios: Comentarios,
+      Horario: Horario,
       ID_Cliente: ID_Cliente,
     });
   };
@@ -176,53 +190,70 @@ const databaseService = () => {
 
   const changeHistoryData = async (
     ID,
-    Historial,
-    Comentarios,
+     Valoracion1,
+      Valoracion2,
+      Valoracion3,
+      Consulta1,
+      Consulta2,
+      Consulta3,
+     Estudios,
+      Resultados,
   ) => {
     const resultado = await knex(tabla5).where({ ID: ID }).update({
-      Historial: Historial,
-      Comentarios: Comentarios,
+      Valoracion1: Valoracion1,
+      Valoracion2: Valoracion2,
+      Valoracion3: Valoracion3,
+      Consulta1: Consulta1,
+      Consulta2: Consulta2,
+      Consulta3: Consulta3,
+      Estudios: Estudios,
+      Resultados: Resultados,
     });
     return console.log(resultado);
   };
 
   const changePacientData = async (
-    ID_Paciente,
-      Nombre,
-      ApellidoPaterno,
-      ApellidoMaterno,
-      TipoSangre,
-      Edad,
-      NumeroTel,
-      Alergias,
-      Padecimientos,
+    idPaciente,
+       Nombre,
+       ApellidoPaterno,
+       ApellidoMaterno,
+       TipoSangre,
+       Edad,
+       Telefono,
+       Alergias,
+       Enfermedades,
+       Peso,
+       Altura,
+       Medicamentos
     ) => {
-      const resultado = await knex(tabla2).where({ ID_Paciente: ID_Paciente }).update({
+      const resultado = await knex(tabla2).where({ idPaciente: idPaciente }).update({
         Nombre: Nombre,
         ApellidoPaterno: ApellidoPaterno,
         ApellidoMaterno: ApellidoMaterno,
-        Edad: Edad,
         TipoSangre: TipoSangre,
+        Edad: Edad,
+        Telefono: Telefono,
         Alergias: Alergias,
-        Padecimientos: Padecimientos,
-        NumeroTel: NumeroTel,
+        Enfermedades: Enfermedades,
+        Peso: Peso,
+        Altura: Altura,
+        Medicamentos: Medicamentos,
       });
       return console.log(resultado);
     };
 
-    const changeCitaData = async (  ID_citas, ID_Doctor, FechaHora, Estado, asunto, ID_Cliente) => {
+    const changeCitaData = async (  ID_doctor, Comentarios, Horario, ID_Cliente) => {
       const resultado = await knex(tabla3).where({ ID_citas: ID_citas }).update({
-        ID_Doctor: ID_Doctor,
-        FechaHora: FechaHora,
-        Estado: Estado,
-        asunto: asunto,
+        ID_doctor: ID_doctor,
+        Comentarios: Comentarios,
+        Horario: Horario,
         ID_Cliente: ID_Cliente,
       });
       return console.log(resultado);
     };
 
-    const deleteCita = (ID_citas) => {
-      return knex(tabla3).where({ ID_citas: ID_citas }).del();
+    const deleteCita = (ID_Cliente) => {
+      return knex(tabla3).where({ ID_Cliente: ID_Cliente }).del();
     };
 
     const changeProductData = async (
@@ -261,6 +292,8 @@ const databaseService = () => {
     changeProductData,
     getHistorialEspecifico,
     getProductos,
+    getHistorial,
+    getPaciente,
   };
 };
 

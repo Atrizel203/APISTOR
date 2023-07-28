@@ -118,6 +118,23 @@ module.exports = function (app, databaseService) {
       .catch((e) => response.status(500).json(e));
   });
 
+  app.get("/HistorialesPacientes", (request, response) => {
+    const {ID} = request.query;
+    databaseService
+      .getHistorial(ID)
+      .then((historial) => {
+        response.json(historial);
+      })
+      .catch((e) => response.status(500).json(e));
+    databaseService
+      .getPaciente(ID)
+      .then((paciente) => {
+        response.json(paciente);
+      }
+      )
+      .catch((e) => response.status(500).json(e));
+  });
+
   app.post("/crearHistorial", (request, response) => {
     const newHistory = request.body;
     console.log(newHistory);
@@ -142,43 +159,73 @@ module.exports = function (app, databaseService) {
   });
 
   app.put("/modHistorial", (request, response) => {
-    const { ID, Nombre, ApellidoPaterno, ApellidoMaterno, Edad, Historial, Comentarios, ID_Paciente, TipoSangre, NumeroTel, Alergias, Padecimientos } =
+    const { ID,
+      Valoracion1,
+       Valoracion2,
+       Valoracion3,
+       Consulta1,
+       Consulta2,
+       Consulta3,
+      Estudios,
+       Resultados, idPaciente,
+       Nombre,
+       ApellidoPaterno,
+       ApellidoMaterno,
+       TipoSangre,
+       Edad,
+       Telefono,
+       Alergias,
+       Enfermedades,
+       Peso,
+       Altura,
+       Medicamentos,} =
       request.body;
     databaseService
       .changeHistoryData(
         ID,
-        Nombre,
-        ApellidoPaterno,
-        ApellidoMaterno,
-        Edad,
-        Historial,
-        Comentarios,
-        ID_Paciente,
-        TipoSangre,
-        NumeroTel,
-        Alergias,
-        Padecimientos
+      Valoracion1,
+       Valoracion2,
+       Valoracion3,
+       Consulta1,
+       Consulta2,
+       Consulta3,
+      Estudios,
+       Resultados, idPaciente,
+       Nombre,
+       ApellidoPaterno,
+       ApellidoMaterno,
+       TipoSangre,
+       Edad,
+       Telefono,
+       Alergias,
+       Enfermedades,
+       Peso,
+       Altura,
+       Medicamentos
       )
       .catch((e) => response.status(500).json(e));
     databaseService.changePacientData(
-      ID_Paciente,
-      Nombre,
-      ApellidoPaterno,
-      ApellidoMaterno,
-      TipoSangre,
-      Edad,
-      NumeroTel,
-      Alergias,
-      Padecimientos
+      idPaciente,
+       Nombre,
+       ApellidoPaterno,
+       ApellidoMaterno,
+       TipoSangre,
+       Edad,
+       Telefono,
+       Alergias,
+       Enfermedades,
+       Peso,
+       Altura,
+       Medicamentos
     )
       .then(response.send("Historial MODIFICADO"))
       .catch((e) => response.status(500).json(e));
   });
 
   app.get("/historialesp", (request, response) => {
-    const {ID_Paciente} = request.query;
+    const {idPaciente} = request.query;
     databaseService
-      .getHistorialEspecifico(ID_Paciente)
+      .getHistorialEspecifico(idPaciente)
       .then((historial) => {
         response.json(historial);
       })
@@ -212,16 +259,14 @@ module.exports = function (app, databaseService) {
   });
 
   app.put("/modCita", (request, response) => {
-    const { ID_citas, ID_Cliente, ID_Doctor, FechaHora, Estado, asunto } =
+    const {  ID_doctor, Comentarios, Horario, ID_Cliente, } =
       request.body;
     databaseService
       .changeCitaData(
-        ID_citas,
+        ID_doctor,
+        Comentarios,
+        Horario,
         ID_Cliente,
-        ID_Doctor,
-        FechaHora,
-        Estado,
-        asunto
       )
       .then(response.send("Cita MODIFICADA"))
       .catch((e) => response.status(500).json(e));
@@ -229,10 +274,10 @@ module.exports = function (app, databaseService) {
   );
 
   app.delete("/removeCita", (request, response) => {
-    const ID_citas = 0;
+    const {ID_Cliente} = request.query;
     databaseService
-      .deleteCita(ID_citas)
-      .then((Fincas) => {
+      .deleteCita(ID_Cliente)
+      .then(() => {
         response.send("Cita eliminada");
       })
       .catch((e) => response.status(500).json(e));
